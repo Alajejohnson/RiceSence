@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "896383699828",
+    "project_id": "ricesense-a6959",
+    "storage_bucket": "ricesense-a6959.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:896383699828:android:1869332ed60cf5659c7a21",
+        "android_client_info": {
+          "package_name": "com.johnson.ricesence"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5aS5ISTW_HUr5n6XjMaYO_mvwAJ3HIYs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

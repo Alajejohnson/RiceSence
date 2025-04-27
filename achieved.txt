@@ -200,3 +200,39 @@ const styles= StyleSheet.create ({
   });
 
 export default Pest
+
+
+
+
+
+
+
+---------------------------------pest sub-----------------------------
+//   const saveImageUrlToFirebase = async (url) => {
+//     const user = auth.currentUser;
+//     if (!user) return;
+//     const imageRef = ref(database, "users/" + user.uid + "/pestImage");
+//     await set(imageRef, {
+//       imageUrl: url,
+//       uploadedAt: new Date().toISOString(),
+//     });
+//   };
+
+//   const handleImage = async (result) => {
+//     if (!result.canceled) {
+//       const imageUri = result.assets[0].uri;
+//       console.log("Selected image URI:", imageUri);
+//       setImage(imageUri);
+//       setUploading(true);
+
+//       const cloudinaryUrl = await uploadImageToCloudinary(imageUri);
+//       if (cloudinaryUrl) {
+//         await saveImageUrlToFirebase(cloudinaryUrl);
+//         Alert.alert("Success", "Image uploaded and saved!");
+//       } else {
+//         Alert.alert("Upload Failed", "Could not upload image.");
+//       }
+
+//       setUploading(false);
+//     }
+//   };

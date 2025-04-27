@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { ref, set } from "firebase/database";
+import * as ImageManipulator from "expo-image-manipulator";
 import { auth, database } from "@/FirebaseConfig";
 
 const Pest = () => {
@@ -45,35 +46,6 @@ const Pest = () => {
     }
   };
   
-
-//   const saveImageUrlToFirebase = async (url) => {
-//     const user = auth.currentUser;
-//     if (!user) return;
-//     const imageRef = ref(database, "users/" + user.uid + "/pestImage");
-//     await set(imageRef, {
-//       imageUrl: url,
-//       uploadedAt: new Date().toISOString(),
-//     });
-//   };
-
-//   const handleImage = async (result) => {
-//     if (!result.canceled) {
-//       const imageUri = result.assets[0].uri;
-//       console.log("Selected image URI:", imageUri);
-//       setImage(imageUri);
-//       setUploading(true);
-
-//       const cloudinaryUrl = await uploadImageToCloudinary(imageUri);
-//       if (cloudinaryUrl) {
-//         await saveImageUrlToFirebase(cloudinaryUrl);
-//         Alert.alert("Success", "Image uploaded and saved!");
-//       } else {
-//         Alert.alert("Upload Failed", "Could not upload image.");
-//       }
-
-//       setUploading(false);
-//     }
-//   };
 
 const saveImageUrlToFirebase = async (url, detectedClass) => {
     const user = auth.currentUser;
@@ -115,27 +87,38 @@ const saveImageUrlToFirebase = async (url, detectedClass) => {
     }
   };
 
+
   const handleImage = async (result) => {
     if (!result.canceled) {
-      const imageUri = result.assets[0].uri;
+      let imageUri = result.assets[0].uri;
+      console.log("Selected image URI:", imageUri);
+  
+      // Compress/Resize the image before upload
+      const compressedImage = await ImageManipulator.manipulateAsync(
+        imageUri,
+        [{ resize: { width: 800 } }],
+        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+      );
+  
+      imageUri = compressedImage.uri; // update to use compressed image
+  
       setImage(imageUri);
       setUploading(true);
-      setDetectionResult(null); // <-- reset previous result
-
+  
       const cloudinaryUrl = await uploadImageToCloudinary(imageUri);
-      const detectedClass = await detectDiseaseWithRoboflow(imageUri); // <-- NEW: run detection
-
       if (cloudinaryUrl) {
+        await saveImageUrlToFirebase(cloudinaryUrl);
+        const detectedClass = await detectDiseaseWithRoboflow(imageUri);
         await saveImageUrlToFirebase(cloudinaryUrl, detectedClass);
-        Alert.alert("Success", "Image analyzed and saved!");
+        Alert.alert("Success", "Image uploaded and saved!");
       } else {
         Alert.alert("Upload Failed", "Could not upload image.");
       }
-
+  
       setUploading(false);
     }
   };
-
+  
 
   const takePicture = async () => {
     try {
@@ -171,7 +154,7 @@ const saveImageUrlToFirebase = async (url, detectedClass) => {
       }
 
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ImagePicker.MediaType.Images,
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
@@ -251,6 +234,13 @@ const saveImageUrlToFirebase = async (url, detectedClass) => {
             {image && (
               <Image source={{ uri: image }} style={styles.imagePreview} />
             )}
+
+      {detectionResult && (
+        <Text style={{ textAlign: 'center', marginTop: 10, fontSize: 16 }}>
+          Diagnosis: {detectionResult}
+        </Text>
+      )}
+
           </View>
         </View>
       </View>

@@ -7,6 +7,7 @@ import LoginScreen from "../../screens/LoginScreen";
 import MainMenu from "../../screens/MainMenu"
 import Fertilizer from "../../screens/Fertilizer"
 import Pest from "../../screens/Pest"
+import History from  "../../screens/History"
 import { ActivityIndicator, View } from "react-native";
 
 const Stack = createStackNavigator();
@@ -23,6 +24,7 @@ export default function App() {
         <Stack.Screen name="Menu" component={MainMenu} />
         <Stack.Screen name="Pest" component={Pest} />
         <Stack.Screen name="Fertilizer" component={Fertilizer} />
+        <Stack.Screen name="History" component={History} />
       </Stack.Navigator>
     
   );

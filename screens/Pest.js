@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { ref, set } from "firebase/database";
+import { ref, set, push } from "firebase/database";
 import * as ImageManipulator from "expo-image-manipulator";
 import { auth, database } from "@/FirebaseConfig";
 
@@ -47,14 +47,15 @@ const Pest = () => {
   };
   
 
-const saveImageUrlToFirebase = async (url, detectedClass) => {
+  const saveImageUrlToFirebase = async (url, detectedClass) => {
     const user = auth.currentUser;
     if (!user) return;
-    const imageRef = ref(database, "users/" + user.uid + "/pestImage");
-    await set(imageRef, {
+  
+    const historyRef = ref(database, "users/" + user.uid + "/pestHistory");
+    await push(historyRef, {
       imageUrl: url,
       uploadedAt: new Date().toISOString(),
-      diagnosis: detectedClass || "Unknown", // <-- NEW: save detection result
+      diagnosis: detectedClass || "Unknown",
     });
   };
 

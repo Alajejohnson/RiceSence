@@ -236,3 +236,21 @@ export default Pest
 //       setUploading(false);
 //     }
 //   };
+
+
+
+
+
+
+--------------pevvious saveImageUrlToFirebase------------------
+
+const saveImageUrlToFirebase = async (url, detectedClass) => {
+    const user = auth.currentUser;
+    if (!user) return;
+    const imageRef = ref(database, "users/" + user.uid + "/pestImage");
+    await set(imageRef, {
+      imageUrl: url,
+      uploadedAt: new Date().toISOString(),
+      diagnosis: detectedClass || "Unknown", // <-- NEW: save detection result
+    });
+  };
